@@ -1,0 +1,93 @@
+╔═══════════════════════════════════════════════════════════════════════╗
+║  DÉMARRAGE DU SERVEUR - STOCKAGE CÔTÉ SERVEUR ACTIVÉ                  ║
+╚═══════════════════════════════════════════════════════════════════════╝
+
+✅ CHANGEMENTS EFFECTUÉS:
+═════════════════════════
+
+1. ✓ Serveur Node.js/Express (server.js)
+   - Création d'une API REST complète
+   - Routes d'authentification: /api/auth/register, /api/auth/login
+   - Routes de profil: /api/user/profile, /api/user/delete
+   - Routes de scores: /api/scores, /api/user/scores
+   - Stockage des utilisateurs dans users.json
+   - Stockage des scores dans scores.json + profils utilisateurs
+
+2. ✓ AuthManager.js
+   - Modification pour utiliser l'API HTTP (fetch)
+   - Tous les appels utilisant async/await
+   - Stockage local minimal: token + username pour la session
+   - Pas de localStorage de données complètes
+
+3. ✓ Pages HTML
+   - auth.html: utilise async register() et async login()
+   - profile.html: utilise async getCurrentUserData()
+   - leaderboard.html: utilise async getAllScores()
+   - stats.html: utilise async getCurrentUserData()
+   - easy.js: utilise async addScore()
+
+🚀 COMMENT DÉMARRER LE SERVEUR:
+═════════════════════════════════
+
+1. Ouvrir PowerShell dans c:\Users\knorv\Desktop\SITE EVENT
+
+2. Exécuter:
+   node server.js
+
+3. Le serveur démarre sur: http://localhost:3000
+
+4. Dans votre navigateur, allez à: http://localhost:3000
+
+📁 FICHIERS DE DONNÉES CÔTÉ SERVEUR:
+════════════════════════════════════
+
+- users.json      : Tous les comptes utilisateurs avec leurs scores
+- scores.json     : Historique global des scores (pour compatibilité)
+
+Structure users.json:
+{
+  "username1": {
+    "email": "user@example.com",
+    "discord": "discord_username",
+    "password": "hash...",
+    "createdAt": "2026-01-19T...",
+    "scores": [
+      {
+        "score": 45,
+        "questions": 50,
+        "difficulty": "Quiz",
+        "date": "2026-01-19T..."
+      }
+    ]
+  }
+}
+
+⚡ SÉCURITÉ:
+═════════════
+
+- Passwords hashés côté serveur
+- Email/Discord uniques validés côté serveur
+- Tokens simples (en production utiliser JWT)
+- CORS activé sur toutes les routes
+
+✅ FONCTIONNALITÉS:
+═══════════════════
+
+✓ Création de compte avec email et pseudo Discord
+✓ Connexion par email ou pseudo
+✓ Stockage sécurisé des mots de passe
+✓ Sauvegarde des scores par utilisateur
+✓ Profil utilisateur avec historique des parties
+✓ Classement global
+✓ Suppression de compte
+
+⚠️ IMPORTANT:
+═════════════
+
+- Le serveur DOIT être en cours d'exécution pour utiliser l'application
+- Les données sont stockées dans JSON (pas de vraie base de données)
+- En production, utiliser une vraie base de données (MongoDB, PostgreSQL, etc.)
+- Implémenter JWT pour la sécurité des tokens
+- Mettre en place une vraie authentification sécurisée
+
+═══════════════════════════════════════════════════════════════════════════

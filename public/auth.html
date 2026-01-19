@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KanaeQuizz - Authentification</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0edd3b 0%, #073312 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .auth-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: 450px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .auth-header {
+            background: linear-gradient(135deg, #0edd3b 0%, #073312 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .auth-header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .auth-header p {
+            opacity: 0.9;
+        }
+
+        .auth-content {
+            padding: 40px 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #0edd3b;
+        }
+
+        .btn-auth {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 10px;
+        }
+
+        .btn-login {
+            background: #0edd3b;
+            color: #000;
+        }
+
+        .btn-login:hover {
+            background: #0ac830;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(14, 221, 59, 0.3);
+        }
+
+        .btn-register {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-register:hover {
+            background: #059669;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .toggle-form {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+        }
+
+        .toggle-form button {
+            background: none;
+            border: none;
+            color: #0edd3b;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: underline;
+        }
+
+        .error-message {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .success-message {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        .back-btn {
+            background: #f3f4f6;
+            color: #333;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #e5e7eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-header">
+            <h1>🍃 KanaeQuizz</h1>
+            <p>Gérez votre compte</p>
+        </div>
+
+        <div class="auth-content">
+            <!-- Écran de choix initial -->
+            <div id="choice-section" class="form-section active">
+                <h2 style="text-align: center; margin-bottom: 30px; color: #333;">Bienvenue</h2>
+                <button class="btn-auth btn-login" onclick="showLoginForm()">
+                    🔓 Se connecter
+                </button>
+                <button class="btn-auth btn-register" onclick="showRegisterForm()">
+                    ✍️ Créer un compte
+                </button>
+                <div style="text-align: center; margin: 20px 0;">
+                    <button class="btn-auth" style="background: #5865F2; color: white; font-weight: 700;" onclick="loginWithDiscord()">
+                        <img src="https://cdn.discordapp.com/icons/613045786807296051/a_2b7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e.gif?size=32" style="vertical-align: middle; width: 24px; height: 24px; margin-right: 8px; border-radius: 6px;"> Se connecter avec Discord
+                    </button>
+                </div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <a href="index.html" style="color: #0edd3b; text-decoration: none; font-weight: 600;">
+                        ← Retour à l'accueil
+                    </a>
+                </div>
+            </div>
+
+            <!-- Formulaire de connexion -->
+            <div id="login-section" class="form-section">
+                <button class="back-btn" onclick="showChoice()">← Retour</button>
+                <h2 style="margin-bottom: 30px; color: #333;">Connexion</h2>
+                <div style="text-align: center; margin: 20px 0;">
+                    <button class="btn-auth" style="background: #5865F2; color: white; font-weight: 700;" onclick="loginWithDiscord()">
+                        <img src="https://cdn.discordapp.com/icons/613045786807296051/a_2b7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e.gif?size=32" style="vertical-align: middle; width: 24px; height: 24px; margin-right: 8px; border-radius: 6px;"> Se connecter avec Discord
+                    </button>
+                </div>
+
+                <div class="error-message" id="login-error"></div>
+                <div class="success-message" id="login-success"></div>
+
+                <div class="form-group">
+                    <label for="login-email">Email ou Pseudo</label>
+                    <input type="text" id="login-email" placeholder="Entrez votre email ou pseudo" autocomplete="username">
+                </div>
+
+                <div class="form-group">
+                    <label for="login-password">Mot de passe</label>
+                    <input type="password" id="login-password" placeholder="Entrez votre mot de passe" autocomplete="current-password">
+                </div>
+
+                <button class="btn-auth btn-login" onclick="login()">Se connecter</button>
+            </div>
+
+            <!-- Formulaire d'inscription -->
+            <div id="register-section" class="form-section">
+                <button class="back-btn" onclick="showChoice()">← Retour</button>
+                <h2 style="margin-bottom: 30px; color: #333;">Créer un compte</h2>
+                <div style="text-align: center; margin: 20px 0;">
+                    <button class="btn-auth" style="background: #5865F2; color: white; font-weight: 700;" onclick="loginWithDiscord()">
+                        <img src="https://cdn.discordapp.com/icons/613045786807296051/a_2b7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e.gif?size=32" style="vertical-align: middle; width: 24px; height: 24px; margin-right: 8px; border-radius: 6px;"> S'inscrire avec Discord
+                    </button>
+                </div>
+
+                <div class="error-message" id="register-error"></div>
+                <div class="success-message" id="register-success"></div>
+
+                <div class="form-group">
+                    <label for="register-username">Pseudo</label>
+                    <input type="text" id="register-username" placeholder="Choisissez un pseudo" maxlength="20" autocomplete="username">
+                </div>
+
+                <div class="form-group">
+                    <label for="register-email">Email</label>
+                    <input type="email" id="register-email" placeholder="Entrez votre email" autocomplete="email">
+                </div>
+
+                <div class="form-group">
+                    <label for="register-discord">Pseudo Discord</label>
+                    <input type="text" id="register-discord" placeholder="Votre pseudo Discord" maxlength="32">
+                </div>
+
+                <div class="form-group">
+                    <label for="register-password">Mot de passe</label>
+                    <input type="password" id="register-password" placeholder="Créez un mot de passe (min. 6 caractères)" autocomplete="new-password">
+                </div>
+
+                <div class="form-group">
+                    <label for="register-confirm">Confirmer le mot de passe</label>
+                    <input type="password" id="register-confirm" placeholder="Confirmez votre mot de passe" autocomplete="new-password">
+                </div>
+
+                <button class="btn-auth btn-register" onclick="register()">Créer mon compte</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="AuthManager.js"></script>
+    <script>
+        function showChoice() {
+            document.getElementById('choice-section').classList.add('active');
+            document.getElementById('login-section').classList.remove('active');
+            document.getElementById('register-section').classList.remove('active');
+            clearMessages();
+        }
+
+        function showLoginForm() {
+            document.getElementById('choice-section').classList.remove('active');
+            document.getElementById('login-section').classList.add('active');
+            document.getElementById('register-section').classList.remove('active');
+            clearMessages();
+        }
+
+        function showRegisterForm() {
+            document.getElementById('choice-section').classList.remove('active');
+            document.getElementById('login-section').classList.remove('active');
+            document.getElementById('register-section').classList.add('active');
+            clearMessages();
+        }
+
+        function clearMessages() {
+            document.getElementById('login-error').style.display = 'none';
+            document.getElementById('login-success').style.display = 'none';
+            document.getElementById('register-error').style.display = 'none';
+            document.getElementById('register-success').style.display = 'none';
+        }
+
+        function login() {
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+            const errorDiv = document.getElementById('login-error');
+
+            errorDiv.style.display = 'none';
+
+            if (!email || !password) {
+                errorDiv.textContent = '❌ Veuillez remplir tous les champs';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            authManager.login(email, password).then(result => {
+                if (result.success) {
+                    document.getElementById('login-success').textContent = '✅ Connexion réussie ! Redirection...';
+                    document.getElementById('login-success').style.display = 'block';
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1500);
+                } else {
+                    errorDiv.textContent = '❌ ' + result.message;
+                    errorDiv.style.display = 'block';
+                }
+            });
+        }
+
+        function register() {
+            const username = document.getElementById('register-username').value.trim();
+            const email = document.getElementById('register-email').value.trim();
+            const discord = document.getElementById('register-discord').value.trim();
+            const password = document.getElementById('register-password').value;
+            const confirm = document.getElementById('register-confirm').value;
+            const errorDiv = document.getElementById('register-error');
+
+            errorDiv.style.display = 'none';
+
+            if (!username || !email || !discord || !password || !confirm) {
+                errorDiv.textContent = '❌ Veuillez remplir tous les champs';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            if (password.length < 6) {
+                errorDiv.textContent = '❌ Le mot de passe doit contenir au moins 6 caractères';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            if (password !== confirm) {
+                errorDiv.textContent = '❌ Les mots de passe ne correspondent pas';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            authManager.register(username, email, password, discord).then(result => {
+                if (result.success) {
+                    document.getElementById('register-success').textContent = '✅ Compte créé avec succès ! Connexion automatique...';
+                    document.getElementById('register-success').style.display = 'block';
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1500);
+                } else {
+                    errorDiv.textContent = '❌ ' + result.message;
+                    errorDiv.style.display = 'block';
+                }
+            });
+        }
+
+        function loginWithDiscord() {
+            // CLIENT_ID fourni par l'utilisateur
+            const CLIENT_ID = '1462861442096300132';
+            const REDIRECT_URI = encodeURIComponent('http://localhost:3000/api/discord/callback');
+            const SCOPE = 'identify email';
+            const DISCORD_URL = `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=${SCOPE}`;
+            window.location.href = DISCORD_URL;
+        }
+
+        // Vérifier si l'utilisateur est déjà connecté
+        if (authManager.isLoggedIn()) {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

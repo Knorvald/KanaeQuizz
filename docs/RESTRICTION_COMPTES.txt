@@ -1,0 +1,181 @@
+✅ RESTRICTION COMPTES - SCORES SAUVEGARDÉS
+════════════════════════════════════════════════════════════
+
+📋 OBJECTIF ATTEINT
+──────────────────────────────────────────────────────────
+
+✅ Joueurs SANS compte ne peuvent PAS sauvegarder leurs scores
+✅ Joueurs SANS compte ne peuvent PAS être au classement
+✅ Seuls les comptes enregistrés peuvent être au leaderboard
+✅ Message d'avertissement affiché à la fin du quiz
+
+
+🔧 MODIFICATIONS APPORTÉES
+──────────────────────────────────────────────────────────
+
+1️⃣ public/easy.js
+   ─────────────────
+   
+   Fonction saveScore() modifiée:
+   
+   AVANT:
+   ❌ Acceptait les scores des joueurs sans compte
+   ❌ Sauvegardait les scores des invités en localStorage
+   
+   APRÈS:
+   ✅ Vérifie si l'utilisateur est connecté
+   ✅ Refuse les scores des joueurs sans compte
+   ✅ Affiche un message d'avertissement en console
+   
+   Code:
+   if (authManager && authManager.isLoggedIn()) {
+       // Sauvegarder le score
+   } else {
+       // Refus - pas de sauvegarde
+   }
+
+
+2️⃣ src/server.js
+   ──────────────
+   
+   Endpoint POST /api/scores modifié:
+   
+   AVANT:
+   ❌ Code 404 si utilisateur non trouvé
+   ❌ Acceptait n'importe quel username
+   
+   APRÈS:
+   ✅ Code 403 (Forbidden) si utilisateur n'existe pas
+   ✅ Message: "Vous devez être connecté avec un compte..."
+   
+   Code:
+   if (!user) {
+       res.writeHead(403, { 'Content-Type': 'application/json' });
+       res.end(JSON.stringify({ 
+           success: false, 
+           message: 'Vous devez être connecté...' 
+       }));
+   }
+
+
+3️⃣ public/easy.html
+   ─────────────────
+   
+   Écran de résultats amélioré:
+   
+   ✅ Message d'avertissement affiché pour joueurs sans compte
+   ✅ Indique la nécessité de créer un compte pour sauvegarder
+   ✅ Message en couleur orange pour attirer l'attention
+   
+   Message affiché:
+   ┌─────────────────────────────────────────────┐
+   │ 📝 Score non sauvegardé                    │
+   │                                             │
+   │ Vous jouez sans compte. Créez un compte    │
+   │ pour :                                      │
+   │ ✅ Sauvegarder vos scores                  │
+   │ ✅ Voir vos statistiques                   │
+   │ ✅ Apparaître au classement                │
+   └─────────────────────────────────────────────┘
+
+
+4️⃣ public/easy.js - showResults()
+   ──────────────────────────────
+   
+   Nouvelle logique:
+   
+   ✅ Affiche le message UNIQUEMENT si pas connecté
+   ✅ Cache le message si l'utilisateur est connecté
+   ✅ Utilise: authManager.isLoggedIn()
+   
+   Code:
+   if (authManager && authManager.isLoggedIn()) {
+       noAccountMsg.style.display = 'none';
+   } else {
+       noAccountMsg.style.display = 'block';
+   }
+
+
+🔄 FLUX D'UTILISATION
+──────────────────────────────────────────────────────────
+
+Joueur AVEC Compte:
+───────────────────
+1. Se connecte
+2. Joue au quiz
+3. Termine le quiz
+4. Score sauvegardé automatiquement ✅
+5. Voit ses stats au classement ✅
+
+Joueur SANS Compte:
+───────────────────
+1. Ouvre le site
+2. Joue au quiz
+3. Termine le quiz
+4. Voit message "Score non sauvegardé" ⚠️
+5. N'apparaît PAS au classement
+6. Peut créer un compte pour sauvegarder
+
+
+📊 DONNÉES AFFECTÉES
+──────────────────────────────────────────────────────────
+
+API /api/scores (GET):
+├─ Retourne UNIQUEMENT les scores des comptes enregistrés
+├─ Ignore complètement les joueurs sans compte
+└─ Meilleur score par compte
+
+API /api/scores (POST):
+├─ Accepte les requêtes des comptes EXISTANTS
+├─ Refuse les requêtes des utilisateurs non enregistrés
+└─ Code HTTP 403 (Forbidden)
+
+
+✅ TEST RECOMMANDÉ
+──────────────────────────────────────────────────────────
+
+Test 1 - Joueur sans compte:
+1. Ouvrir http://localhost:3000
+2. NE PAS se connecter
+3. Cliquer "Jouer"
+4. Jouer au quiz
+5. ✅ Voir message "Score non sauvegardé"
+6. ✅ Score non dans la BDD
+
+Test 2 - Joueur avec compte:
+1. Créer un compte
+2. Se connecter
+3. Jouer au quiz
+4. ✅ Pas de message d'avertissement
+5. ✅ Score sauvegardé
+6. ✅ Visible au classement
+
+
+🚀 DÉPLOIEMENT
+──────────────────────────────────────────────────────────
+
+Le serveur a été redémarré avec:
+✅ npm start
+ou
+✅ node src/server.js
+
+Port: 3000
+URL: http://localhost:3000
+
+
+⚠️ NOTES IMPORTANTES
+──────────────────────────────────────────────────────────
+
+• Les joueurs sans compte PEUVENT TOUJOURS JOUER
+• Seule la sauvegarde/classement est restreinte
+• Le client refuse de sauvegarder (facile.js)
+• Le serveur AUSSI refuse (sécurité double couche)
+• Message UX clair pour guider les joueurs
+
+
+═════════════════════════════════════════════════════════
+
+✅ RESTRICTION IMPLÉMENTÉE AVEC SUCCÈS ✅
+
+Date: 19 janvier 2026
+Status: PRODUCTION READY

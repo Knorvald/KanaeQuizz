@@ -1,0 +1,206 @@
+═══════════════════════════════════════════════════════════════════════════════
+  KANAEQUIZZ - GUIDE DE CONFIGURATION DU SCOREBOARD
+═══════════════════════════════════════════════════════════════════════════════
+
+Il existe 2 façons de stocker les scores avec KanaeQuizz:
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ APPROCHE 1: CLIENT-SIDE (RECOMMANDÉE) - Sans installation                  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+✅ AVANTAGES:
+   • Aucune installation requise
+   • Pas de serveur à gérer
+   • Fonctionne hors-ligne
+   • Rapide et réactif
+   • Sauvegarde locale robuste (IndexedDB + localStorage)
+
+⚠️ LIMITATIONS:
+   • Les scores sont limités à 1 navigateur (pas de synchronisation multi-PC)
+   • Peuvent être perdus si le cache du navigateur est vidé
+   
+📦 TECHNOLOGIE:
+   • IndexedDB: Base de données navigateur (robuste)
+   • localStorage: Stockage clé-valeur (fallback)
+   • Service Worker: Cache des fichiers
+
+🚀 COMMENT UTILISER:
+   1. Double-cliquez sur index.html
+   2. Jouez normalement
+   3. Les scores se sauvegardent automatiquement
+   4. Cliquez "Télécharger" pour exporter les scores en JSON
+
+📝 FORMAT DE SAUVEGARDE:
+   Stockage local dans le navigateur (IndexedDB puis localStorage)
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ APPROCHE 2: SERVEUR NODE.JS (OPTIONNEL) - Avec persistance en fichier     │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+✅ AVANTAGES:
+   • Les scores sont sauvegardés dans un fichier scores.json
+   • Persistance durée entre fermetures de navigateur
+   • Pas de limitation de stockage navigateur
+   • Peut gérer plusieurs utilisateurs
+
+⚠️ LIMITATIONS:
+   • Nécessite Node.js installé
+   • Serveur local seulement (pas d'accès distant)
+   • Plus complexe à mettre en place
+
+📦 TECHNOLOGIE:
+   • Node.js: Serveur JavaScript
+   • Module http natif: Pas de dépendance externe
+   • Fichier JSON: Persistence
+
+🚀 COMMENT UTILISER:
+   1. Installez Node.js (https://nodejs.org/)
+   2. Ouvrez PowerShell dans le dossier
+   3. Lancez: npm start
+   4. Accédez: http://localhost:3000
+   5. Les scores sont dans scores.json
+
+📝 FORMAT DE SAUVEGARDE:
+   [
+     {
+       "pseudo": "Joueur1",
+       "score": 42,
+       "questions": 50,
+       "date": "19/01/2026 15:30:45",
+       "difficulty": "Facile"
+     }
+   ]
+
+
+═════════════════════════════════════════════════════════════════════════════════
+
+COMPARAISON DÉTAILLÉE:
+
+┌──────────────────────────┬─────────────────────────┬─────────────────────┐
+│ ASPECT                   │ APPROCHE 1 (CLIENT)     │ APPROCHE 2 (SERVEUR)│
+├──────────────────────────┼─────────────────────────┼─────────────────────┤
+│ Installation             │ ✅ Aucune               │ ⚠️ Node.js requis   │
+│ Facilité d'utilisation   │ ✅ Très facile          │ ⚠️ Nécessite terminal
+│ Persistance              │ ✅ Robuste (IndexedDB)  │ ✅ Fichier JSON    │
+│ Multi-navigateur         │ ❌ Non                  │ ✅ Oui             │
+│ Multi-PC (sans export)   │ ❌ Non                  │ ✅ Oui             │
+│ Compatibilité            │ ✅ Tous les nav.        │ ✅ Tous les nav.   │
+│ Limite de stockage       │ ⚠️ 50MB ~ 1GB max      │ ✅ Illimitée       │
+│ Offline mode             │ ✅ Oui                  │ ❌ Non             │
+│ Export/Import            │ ✅ Intégré              │ ⚠️ Manuel (JSON)   │
+│ Complexité serveur       │ ✅ Aucune               │ ⚠️ Faible          │
+│ Coût                     │ ✅ Gratuit              │ ✅ Gratuit         │
+└──────────────────────────┴─────────────────────────┴─────────────────────┘
+
+═════════════════════════════════════════════════════════════════════════════════
+
+SCHÉMA TECHNIQUE:
+
+APPROCHE 1 - CLIENT-SIDE:
+───────────────────────────
+
+   Navigateur
+   ┌──────────────────────┐
+   │   index.html         │
+   │   easy.html          │◄──┐
+   │   leaderboard.html   │   │
+   └──────┬───────────────┘   │
+          │                   │
+          ▼                   │
+   ┌──────────────────────┐   │ Synchronisé
+   │  ScoreManager.js     │───┘
+   └──────┬───────────────┘
+          │
+    ┌─────┴─────┐
+    ▼           ▼
+IndexedDB   localStorage
+   │           │
+   └─────┬─────┘
+         │
+    Scores.json (export)
+
+
+APPROCHE 2 - SERVEUR NODE.JS:
+──────────────────────────────
+
+  Navigateur              Serveur Node.js
+  ┌─────────────┐         ┌────────────────┐
+  │  index.html │────────►│  server.js     │
+  │  easy.html  │  API    │  (port 3000)   │
+  └─────────────┘  HTTP   │                │
+                          │  /api/scores   │
+                          │                │
+                          └────────┬───────┘
+                                   ▼
+                            scores.json
+
+═════════════════════════════════════════════════════════════════════════════════
+
+RECOMMANDATIONS PAR USAGE:
+
+CHOIX APPROCHE 1 (Client-Side) SI:
+   ✓ Vous commencez juste (plus simple)
+   ✓ Vous jouez seul
+   ✓ Vous avez un seul navigateur
+   ✓ Vous voulez zéro configuration
+   ✓ Vous utilisez la même machine toujours
+
+CHOIX APPROCHE 2 (Serveur) SI:
+   ✓ Vous avez besoin de persistance multi-PC
+   ✓ Vous avez Node.js installé
+   ✓ Vous avez plusieurs utilisateurs
+   ✓ Vous avez besoin d'une sauvegarde durée
+   ✓ Vous avez besoin de sécurité
+
+═════════════════════════════════════════════════════════════════════════════════
+
+MIGRATION ENTRE LES APPROCHES:
+
+DE CLIENT → SERVEUR:
+   1. Dans leaderboard.html, cliquez "Télécharger"
+   2. Démarrez le serveur Node.js
+   3. Dans leaderboard.html, cliquez "Importer"
+   4. Sélectionnez le fichier téléchargé
+   5. Les scores sont maintenant dans scores.json
+
+DE SERVEUR → CLIENT:
+   1. Lire le fichier scores.json
+   2. Sur la page leaderboard.html, cliquer "Importer"
+   3. Les scores sont disponibles en localStorage/IndexedDB
+
+═════════════════════════════════════════════════════════════════════════════════
+
+FICHIERS IMPLIQUÉS:
+
+Approche 1 (Client-Side):
+  • ScoreManager.js     ← Gestion centralisée
+  • easy.js             ← Utilise ScoreManager
+  • leaderboard.html    ← Affiche depuis ScoreManager
+  • sw.js               ← Service Worker pour cache
+  
+Approche 2 (Serveur):
+  • server.js           ← Serveur HTTP Node.js
+  • package.json        ← Configuration npm
+  • scores.json         ← Fichier de scores
+
+═════════════════════════════════════════════════════════════════════════════════
+
+SUPPORT ET DÉPANNAGE:
+
+Pour tester le système de stockage, ouvrez: test.html
+Il affichera:
+  ✅ Les capacités de votre navigateur
+  ✅ Si localStorage fonctionne
+  ✅ Si IndexedDB fonctionne
+  ✅ La liste des scores stockés
+
+═════════════════════════════════════════════════════════════════════════════════
+
+RÉSUMÉ RAPIDE:
+
+→ Vous ne savez pas? Utilisez l'Approche 1 (Client-Side)
+→ Vous avez Node.js? Essayez l'Approche 2 (Serveur)
+→ Vous voulez les deux? C'est possible! (Approche 1 + backup en Approche 2)
+
+═════════════════════════════════════════════════════════════════════════════════

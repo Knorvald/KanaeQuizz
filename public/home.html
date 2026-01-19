@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KanaeQuizz - Accueil</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0edd3b 0%, #073312 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .home-container {
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.18);
+            padding: 48px 36px;
+            max-width: 480px;
+            width: 100%;
+            text-align: center;
+        }
+        h1 {
+            color: #059669;
+            margin-bottom: 18px;
+            font-size: 2.5em;
+        }
+        .mini-games-list {
+            margin: 32px 0 24px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        .mini-game-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 16px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .mini-game-btn:hover {
+            background: #059669;
+            transform: translateY(-2px) scale(1.03);
+        }
+        .footer-link {
+            margin-top: 32px;
+            color: #059669;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="home-container">
+        <h1>🍃 KanaeQuizz</h1>
+        <p>Bienvenue ! Choisissez un mini-jeu pour commencer :</p>
+        <div class="mini-games-list">
+            <button class="mini-game-btn" onclick="location.href='easy.html'">Quiz Classique</button>
+            <button class="mini-game-btn" onclick="location.href='stats.html'">Stats Rapides</button>
+            <button class="mini-game-btn" onclick="location.href='test.html'">Test de Connaissances</button>
+            <!-- Ajoutez d'autres mini-jeux ici -->
+        </div>
+        <a class="footer-link" href="leaderboard.html">🏆 Voir le classement</a>
+    </div>
+</body>
+</html>

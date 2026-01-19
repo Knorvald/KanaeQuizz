@@ -1,0 +1,17 @@
+{
+  "name": "kanae-quizz",
+  "version": "1.0.0",
+  "description": "Application de quiz sur le cannabis avec scoreboard persistant",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node src/server.js"
+  },
+  "keywords": ["quiz", "cannabis", "scoreboard"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {},
+  "engines": {
+    "node": ">=12.0.0"
+  }
+}

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de la Sauvegarde des Scores</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0edd3b 0%, #073312 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #059669;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f0fdf4;
+            border-radius: 10px;
+            border-left: 4px solid #059669;
+        }
+
+        .test-section h2 {
+            color: #059669;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+
+        .test-result.success {
+            background: #dcfce7;
+            color: #166534;
+            border-left: 4px solid #22c55e;
+        }
+
+        .test-result.warning {
+            background: #fef3c7;
+            color: #92400e;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .test-result.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid #ef4444;
+        }
+
+        button {
+            background: #059669;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            margin: 5px 5px 5px 0;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #047857;
+        }
+
+        .code {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+
+        .summary {
+            background: #e0f2fe;
+            border-left: 4px solid #0284c7;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .summary h3 {
+            color: #0284c7;
+            margin-bottom: 10px;
+        }
+
+        .summary ul {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test de Sauvegarde des Scores</h1>
+
+        <div class="test-section">
+            <h2>📱 Information du Navigateur</h2>
+            <div id="browser-info"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>🗄️ Test localStorage</h2>
+            <button onclick="testLocalStorage()">Tester localStorage</button>
+            <div id="localStorage-result"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>💾 Test IndexedDB</h2>
+            <button onclick="testIndexedDB()">Tester IndexedDB</button>
+            <div id="indexeddb-result"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>📊 Test ScoreManager</h2>
+            <button onclick="testScoreManager()">Tester ScoreManager</button>
+            <div id="scoremanager-result"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>🎯 Scores Stockés</h2>
+            <button onclick="displayStoredScores()">Afficher les scores</button>
+            <button onclick="clearAllData()">Nettoyer les données</button>
+            <div id="scores-display"></div>
+        </div>
+
+        <div class="summary">
+            <h3>✅ Résumé de Compatibilité</h3>
+            <ul>
+                <li><strong>localStorage</strong> - Supporté par tous les navigateurs</li>
+                <li><strong>IndexedDB</strong> - Supporté par les navigateurs modernes</li>
+                <li><strong>ScoreManager</strong> - Utilise les deux avec fallback</li>
+                <li>
+                    <strong>Status</strong> - 
+                    <span id="overall-status" style="font-weight: bold; color: #059669;">En cours de vérification...</span>
+                </li>
+            </ul>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="index.html" style="text-decoration: none; color: #059669; font-weight: 600;">← Retour à KanaeQuizz</a>
+        </div>
+    </div>
+
+    <script src="ScoreManager.js"></script>
+    <script>
+        // Afficher les infos du navigateur
+        function displayBrowserInfo() {
+            const info = {
+                'Navigateur': navigator.userAgent.split(' ').slice(-1)[0],
+                'Plateforme': navigator.platform,
+                'Langue': navigator.language,
+                'Cookies activés': navigator.cookieEnabled,
+                'Connexion Internet': navigator.onLine ? 'Oui' : 'Non'
+            };
+
+            let html = '<table style="width:100%; border-collapse: collapse;">';
+            for (let key in info) {
+                html += `<tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 8px; font-weight: bold;">${key}</td>
+                    <td style="padding: 8px;">${info[key]}</td>
+                </tr>`;
+            }
+            html += '</table>';
+
+            document.getElementById('browser-info').innerHTML = html;
+        }
+
+        // Test localStorage
+        function testLocalStorage() {
+            const result = document.getElementById('localStorage-result');
+            result.innerHTML = '';
+
+            try {
+                const testKey = 'test_kanae_quizz_' + Date.now();
+                localStorage.setItem(testKey, 'test');
+                localStorage.removeItem(testKey);
+                
+                result.innerHTML = '<div class="test-result success">✅ localStorage fonctionne correctement</div>';
+            } catch (e) {
+                result.innerHTML = `<div class="test-result error">❌ localStorage non disponible: ${e.message}</div>`;
+            }
+        }
+
+        // Test IndexedDB
+        function testIndexedDB() {
+            const result = document.getElementById('indexeddb-result');
+            result.innerHTML = '';
+
+            if (!window.indexedDB) {
+                result.innerHTML = '<div class="test-result error">❌ IndexedDB non supporté par ce navigateur</div>';
+                return;
+            }
+
+            const request = indexedDB.open('test_kanae_' + Date.now(), 1);
+
+            request.onerror = () => {
+                result.innerHTML = `<div class="test-result error">❌ IndexedDB erreur: ${request.error}</div>`;
+            };
+
+            request.onsuccess = () => {
+                const db = request.result;
+                result.innerHTML = '<div class="test-result success">✅ IndexedDB fonctionne correctement</div>';
+                db.close();
+            };
+        }
+
+        // Test ScoreManager
+        function testScoreManager() {
+            const result = document.getElementById('scoremanager-result');
+            result.innerHTML = '';
+
+            if (typeof scoreManager === 'undefined') {
+                result.innerHTML = '<div class="test-result error">❌ ScoreManager non chargé</div>';
+                return;
+            }
+
+            // Sauvegarder un score de test
+            scoreManager.saveScore('Test_User', 99, 50, 'Test');
+
+            // Récupérer et afficher
+            scoreManager.getAllScores((scores) => {
+                if (scores.length > 0) {
+                    result.innerHTML = '<div class="test-result success">✅ ScoreManager fonctionne correctement</div>';
+                    result.innerHTML += '<div class="code">Dernier score: ' + JSON.stringify(scores[scores.length - 1], null, 2) + '</div>';
+                } else {
+                    result.innerHTML = '<div class="test-result warning">⚠️ Aucun score trouvé</div>';
+                }
+            });
+        }
+
+        // Afficher les scores stockés
+        function displayStoredScores() {
+            const result = document.getElementById('scores-display');
+            result.innerHTML = '';
+
+            scoreManager.getAllScores((scores) => {
+                if (scores.length === 0) {
+                    result.innerHTML = '<div class="test-result warning">⚠️ Aucun score stocké</div>';
+                    return;
+                }
+
+                let html = `<div class="test-result success">✅ ${scores.length} score(s) trouvé(s)</div>`;
+                html += '<table style="width:100%; border-collapse: collapse; margin-top: 15px;">';
+                html += '<tr style="background: #059669; color: white;"><th style="padding: 8px; text-align: left;">Pseudo</th><th style="padding: 8px;">Score</th><th style="padding: 8px;">Date</th></tr>';
+
+                scores.forEach(score => {
+                    html += `<tr style="border-bottom: 1px solid #ddd;">
+                        <td style="padding: 8px;">${score.pseudo}</td>
+                        <td style="padding: 8px; text-align: center;">${score.score}</td>
+                        <td style="padding: 8px;">${score.date || 'N/A'}</td>
+                    </tr>`;
+                });
+
+                html += '</table>';
+                result.innerHTML = html;
+            });
+        }
+
+        // Nettoyer les données
+        function clearAllData() {
+            if (confirm('Êtes-vous sûr de vouloir supprimer tous les scores de test?')) {
+                scoreManager.clearAllScores();
+                document.getElementById('scores-display').innerHTML = '<div class="test-result warning">✅ Données nettoyées</div>';
+            }
+        }
+
+        // Vérifier la compatibilité générale
+        function checkCompatibility() {
+            let status = '✅ Tout fonctionne!';
+            let color = '#059669';
+
+            if (!localStorage) {
+                status = '⚠️ Compatibilité limitée';
+                color = '#f59e0b';
+            }
+
+            if (!window.indexedDB) {
+                status = '⚠️ IndexedDB non disponible (localStorage sera utilisé)';
+                color = '#f59e0b';
+            }
+
+            const statusEl = document.getElementById('overall-status');
+            statusEl.textContent = status;
+            statusEl.style.color = color;
+        }
+
+        // Initialiser
+        window.addEventListener('load', () => {
+            displayBrowserInfo();
+            checkCompatibility();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KanaeQuizz - Leaderboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0edd3b 0%, #073312 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #059669;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 2.5em;
+        }
+
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        .leaderboard-table thead {
+            background: #059669;
+            color: white;
+        }
+
+        .leaderboard-table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .leaderboard-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .leaderboard-table tbody tr:hover {
+            background: #f0fdf4;
+        }
+
+        .leaderboard-table tbody tr:nth-child(odd) {
+            background: #fafafa;
+        }
+
+        .rank {
+            font-weight: 700;
+            color: #059669;
+            width: 50px;
+        }
+
+        .rank.top1 {
+            font-size: 1.3em;
+            color: #fbbf24;
+        }
+
+        .rank.top2 {
+            font-size: 1.2em;
+            color: #c0c0c0;
+        }
+
+        .rank.top3 {
+            font-size: 1.1em;
+            color: #cd7f32;
+        }
+
+        .pseudo {
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .score {
+            font-weight: 700;
+            color: #059669;
+            text-align: center;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-home {
+            background: #059669;
+            color: white;
+        }
+
+        .btn-home:hover {
+            background: #047857;
+        }
+
+        .btn-clear {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-clear:hover {
+            background: #dc2626;
+        }
+
+        .btn-export {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-export:hover {
+            background: #2563eb;
+        }
+
+        .btn-import {
+            background: #8b5cf6;
+            color: white;
+        }
+
+        .btn-import:hover {
+            background: #7c3aed;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .medal {
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏆 Leaderboard</h1>
+        
+        <div id="leaderboard-content"></div>
+        
+        <div class="buttons">
+            <a href="index.html" class="btn btn-home">🏠 Retour à l'accueil</a>
+        </div>
+    </div>
+
+    <script src="AuthManager.js"></script>
+    <script src="ScoreManager.js"></script>
+    <script>
+        function displayLeaderboard() {
+            const container = document.getElementById('leaderboard-content');
+
+            // Récupérer les scores du système de compte d'abord
+            if (authManager && typeof authManager.getAllScores === 'function') {
+                authManager.getAllScores().then(scores => {
+                    renderLeaderboard(scores || []);
+                });
+            } else if (scoreManager) {
+                scoreManager.getAllScores((scoresFromManager) => {
+                    renderLeaderboard(scoresFromManager || []);
+                });
+            }
+        }
+
+        function renderLeaderboard(scores) {
+            const container = document.getElementById('leaderboard-content');
+            
+            if (scores.length === 0) {
+                container.innerHTML = '<div class="empty-message">Aucun score pour le moment. Joue pour ajouter des scores au classement!</div>';
+                return;
+            }
+            
+            // Trier les scores par ordre décroissant
+            scores.sort((a, b) => b.score - a.score);
+            
+            let html = `
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th>Rang</th>
+                            <th>Pseudo</th>
+                            <th>Score</th>
+                            <th>Questions</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            scores.forEach((scoreData, index) => {
+                const rank = index + 1;
+                let medal = '';
+                let rankClass = '';
+                if (rank === 1) {
+                    medal = '🥇';
+                    rankClass = 'top1';
+                } else if (rank === 2) {
+                    medal = '🥈';
+                    rankClass = 'top2';
+                } else if (rank === 3) {
+                    medal = '🥉';
+                    rankClass = 'top3';
+                }
+                const pseudo = scoreData.username || scoreData.pseudo || 'Anonyme';
+                const dateStr = scoreData.date ? new Date(scoreData.date).toLocaleDateString() : 'N/A';
+
+                // Discord avatar logic
+                let avatarUrl = '';
+                if (scoreData.discord && scoreData.discord.id && scoreData.discord.avatar) {
+                    // If Discord OAuth2 info is available
+                    avatarUrl = `https://cdn.discordapp.com/avatars/${scoreData.discord.id}/${scoreData.discord.avatar}.png`;
+                } else {
+                    // Fallback: default avatar
+                    avatarUrl = 'https://cdn.discordapp.com/embed/avatars/0.png';
+                }
+
+                html += `
+                    <tr>
+                        <td class="rank ${rankClass}"><span class="medal">${medal}</span>${rank}</td>
+                        <td class="pseudo">
+                            <img src="${avatarUrl}" alt="avatar" style="width:32px;height:32px;border-radius:50%;vertical-align:middle;margin-right:8px;object-fit:cover;">
+                            ${escapeHtml(pseudo)}
+                        </td>
+                        <td class="score">${scoreData.score}</td>
+                        <td style="text-align: center;">${scoreData.questions || 0}</td>
+                        <td>${dateStr}</td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                    </tbody>
+                </table>
+            `;
+            
+            container.innerHTML = html;
+        }
+        
+        function clearScores() {
+            if (confirm('Êtes-vous sûr de vouloir effacer tous les scores? Cette action est irréversible.')) {
+                if (scoreManager) {
+                    scoreManager.clearAllScores();
+                }
+                displayLeaderboard();
+            }
+        }
+        
+        function exportScores() {
+            if (scoreManager) {
+                scoreManager.exportScoresToJSON();
+            }
+        }
+        
+        function importScores() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = (event) => {
+                const file = event.target.files[0];
+                if (file && scoreManager) {
+                    scoreManager.importScoresFromJSON(file);
+                    setTimeout(() => displayLeaderboard(), 500);
+                }
+            };
+            input.click();
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        displayLeaderboard();
+    </script>
+</body>
+</html>

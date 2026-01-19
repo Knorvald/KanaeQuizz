@@ -1,0 +1,59 @@
+📋 DÉMARRAGE RAPIDE - KanaeQuizz
+═════════════════════════════════════
+
+✅ MÉTHODE 1: OUVERTURE DIRECTE (RECOMMANDÉE)
+─────────────────────────────────────────────
+
+1. Double-cliquez sur "index.html" dans le dossier
+2. Jouez et les scores se sauvegardent automatiquement
+3. Les scores persistent dans votre navigateur
+
+⚡ C'EST TOUT! Aucune installation nécessaire.
+
+
+✅ MÉTHODE 2: AVEC SERVEUR (OPTIONNEL)
+──────────────────────────────────────
+
+1. Installez Node.js: https://nodejs.org/
+2. Ouvrez PowerShell dans ce dossier
+3. Lancez: npm start ou node server.js
+4. Allez sur http://localhost:3000
+5. Les scores sont sauvegardés dans scores.json
+
+
+🎯 FONCTIONNALITÉS
+──────────────────
+
+✨ Jouer au quiz
+📊 Voir le leaderboard
+💾 Télécharger vos scores (bouton "Télécharger")
+📂 Importer des scores (bouton "Importer")
+🗑️ Effacer tous les scores
+
+
+📁 FICHIERS IMPORTANTS
+──────────────────────
+
+index.html      → Page d'accueil
+easy.html       → Page du quiz
+leaderboard.html → Classement
+ScoreManager.js → Gestion des scores
+README.md       → Documentation complète
+
+
+❓ PROBLÈMES?
+─────────────
+
+Q: Les scores ne se sauvegardent pas?
+R: Actualisez la page. Si toujours un problème, 
+   utilisez un navigateur moderne (Chrome, Firefox, Edge)
+
+Q: Comment garder les scores définitivement?
+R: Utilisez la Méthode 2 avec serveur, ou exportez vos scores régulièrement
+
+Q: Comment migrer vers un autre ordinateur?
+R: Cliquez "Télécharger" pour exporter, puis "Importer" sur l'autre PC
+
+═════════════════════════════════════════════════════════════════════════════
+
+Pour plus de détails: Voir README.md

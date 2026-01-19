@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KanaeQuizz - Accueil</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0edd3b 0%, #073312 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 50px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+        }
+
+        .description {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .buttons-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-easy {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .btn-medium {
+            background-color: #FF9800;
+            color: white;
+        }
+
+        .btn-hard {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .admin-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #dc2626;
+            color: white;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1em;
+            box-shadow: 0 5px 20px rgba(220, 38, 38, 0.4);
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .admin-button:hover {
+            background-color: #b91c1c;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(220, 38, 38, 0.6);
+        }
+
+        .discord-button {
+            position: fixed;
+            bottom: 30px;
+            right: 200px;
+            background-color: #5865F2;
+            color: white;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1em;
+            box-shadow: 0 5px 20px rgba(88, 101, 242, 0.4);
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .discord-button:hover {
+            background-color: #4752C4;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(88, 101, 242, 0.6);
+        }
+
+        .bug-button {
+            position: fixed;
+            bottom: 30px;
+            right: 370px;
+            background-color: #f59e0b;
+            color: white;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1em;
+            box-shadow: 0 5px 20px rgba(245, 158, 11, 0.4);
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .bug-button:hover {
+            background-color: #d97706;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.6);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #666;
+            font-weight: 700;
+        }
+
+        .close-modal:hover {
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .modal-btn-submit {
+            background-color: #f59e0b;
+            color: white;
+        }
+
+        .modal-btn-submit:hover {
+            background-color: #d97706;
+        }
+
+        .modal-btn-cancel {
+            background-color: #e5e7eb;
+            color: #333;
+        }
+
+        .modal-btn-cancel:hover {
+            background-color: #d1d5db;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍃 KanaeQuizz</h1>
+        <p class="description" id="description">
+            Testez vos connaissances sur le cannabis !
+        </p>
+        
+        <div id="auth-section" style="margin-bottom: 30px; text-align: center;">
+            <!-- Section d'authentification -->
+        </div>
+        
+        <div class="buttons-container" id="game-buttons">
+            <a href="easy.html" class="btn btn-easy">▶ Jouer</a>
+            <a href="leaderboard.html" class="btn btn-medium">🏆 Classement</a>
+        </div>
+        
+        <div id="user-profile" style="margin-top: 30px; padding: 20px; background: #f0f9ff; border-radius: 10px; display: none; text-align: center;">
+            <p style="color: #0369a1; margin-bottom: 10px;">Connecté en tant que <strong id="current-username"></strong></p>
+            <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                <button onclick="viewProfile()" style="padding: 8px 16px; background: #0ea5e9; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">👤 Mon Profil</button>
+                <a href="stats.html" style="padding: 8px 16px; background: #8b5cf6; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; text-decoration: none; display: inline-block;">📊 Statistiques</a>
+                <button onclick="logout()" style="padding: 8px 16px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">🚪 Déconnexion</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="AuthManager.js"></script>
+    <script>
+        // Vérifier l'état de connexion à la charge de la page
+        function initializePage() {
+            if (authManager.isLoggedIn()) {
+                const username = authManager.getCurrentUser();
+                document.getElementById('auth-section').innerHTML = '';
+                document.getElementById('user-profile').style.display = 'block';
+                document.getElementById('current-username').textContent = username;
+            } else {
+                showAuthButtons();
+            }
+        }
+
+        function showAuthButtons() {
+            const authSection = document.getElementById('auth-section');
+            authSection.innerHTML = `
+                <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;">
+                    <a href="auth.html" class="btn" style="background: #10b981; color: white; text-decoration: none; padding: 12px 30px; border-radius: 8px; font-weight: 600; cursor: pointer;">🔐 Connexion / Inscription</a>
+                </div>
+                <p style="color: #666; font-size: 0.9em;">ou jouez sans compte</p>
+            `;
+        }
+
+        function logout() {
+            authManager.logout();
+            document.getElementById('user-profile').style.display = 'none';
+            showAuthButtons();
+            alert('Vous avez été déconnecté.');
+        }
+
+        function viewProfile() {
+            window.location.href = 'profile.html';
+        }
+
+        // Permettre de jouer sans compte
+        function playAsGuest() {
+            const pseudo = prompt('Entrez un pseudo temporaire:', 'Invité');
+            if (pseudo) {
+                localStorage.setItem('playerPseudo', pseudo);
+                window.location.href = 'easy.html';
+            }
+        }
+
+        // Gestion du modal bug
+        function openBugModal() {
+            document.getElementById('bugModal').style.display = 'block';
+        }
+
+        function closeBugModal() {
+            document.getElementById('bugModal').style.display = 'none';
+            document.getElementById('bug-username').value = '';
+            document.getElementById('bug-description').value = '';
+        }
+
+        function submitBug() {
+            const username = document.getElementById('bug-username').value || 'Anonyme';
+            const description = document.getElementById('bug-description').value;
+
+            if (!description.trim()) {
+                alert('Veuillez décrire le bug');
+                return;
+            }
+
+            fetch('/api/report-bug', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: username,
+                    description: description
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert('✅ Merci pour votre signalement ! Le bug a été reporté.');
+                    closeBugModal();
+                } else {
+                    alert('❌ Erreur: ' + data.message);
+                }
+            })
+            .catch(err => {
+                console.error('Erreur:', err);
+                alert('❌ Erreur lors du signalement');
+            });
+        }
+
+        // Fermer le modal en cliquant en dehors
+        window.onclick = function(event) {
+            const modal = document.getElementById('bugModal');
+            if (event.target === modal) {
+                closeBugModal();
+            }
+        }
+
+        // Initialiser la page au chargement
+        window.addEventListener('load', initializePage);
+    </script>
+
+    <!-- Bouton Admin -->
+    <a href="admin.html" class="admin-button">🔑 ADMIN</a>
+    
+    <!-- Bouton Discord -->
+    <a href="https://discord.gg/HxJzCY9P" target="_blank" class="discord-button">💬 DISCORD</a>
+
+    <!-- Bouton Report Bug -->
+    <button class="bug-button" onclick="openBugModal()">🐛 REPORT BUG</button>
+
+    <!-- Modal Report Bug -->
+    <div id="bugModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span>Signaler un bug</span>
+                <button class="close-modal" onclick="closeBugModal()">&times;</button>
+            </div>
+            <div class="form-group">
+                <label for="bug-username">Votre pseudo :</label>
+                <input type="text" id="bug-username" placeholder="Entrez votre pseudo (optionnel)" />
+            </div>
+            <div class="form-group">
+                <label for="bug-description">Description du bug :</label>
+                <textarea id="bug-description" rows="5" placeholder="Décrivez le bug en détail..."></textarea>
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-cancel" onclick="closeBugModal()">Annuler</button>
+                <button class="modal-btn modal-btn-submit" onclick="submitBug()">Signaler le bug</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
